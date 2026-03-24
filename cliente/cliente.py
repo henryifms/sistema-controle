@@ -2,9 +2,15 @@ import socket
 import ctypes
 from ctypes import wintypes
 import os
+import time
 
-IP_DO_SERVIDOR = ''
+IP_DO_SERVIDOR = '10.8.33.158'
 PORTA = 5000
+
+keybd_event = ctypes.windll.user32.keybd_event
+
+VK_RETURN = 0x0D  # código da tecla ENTER
+KEYEVENTF_KEYUP = 0x0002
 
 BlockInput = ctypes.windll.user32.BlockInput
 BlockInput.argtypes = [wintypes.BOOL]
@@ -23,6 +29,13 @@ def destravar_teclado():
         print("Teclado e mouse DESBLOQUEADOS")
     else:
         print("Erro ao desbloquear")
+
+def pressionar_enter_2x():
+    for _ in range(2):
+        keybd_event(VK_RETURN, 0, 0, 0)  # tecla down
+        time.sleep(0.05)
+        keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0)  # tecla up
+        time.sleep(0.2)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((IP_DO_SERVIDOR, PORTA))
@@ -49,3 +62,5 @@ while True:
         elif mensagem == "DESBLOQUEAR_TELA":
             print("Windows não permite destravar tela por scipt (segurança)")
             destravar_teclado()
+            time.sleep(1)
+            pressionar_enter_2x()
