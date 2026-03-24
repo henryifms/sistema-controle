@@ -21,6 +21,12 @@ def gerenciar_clientes():
         print(f"PC conectado: {addr}")
         clientes.append(client)
 
+        try:
+            arduino.write(b"CLIENTE_CONECTADO\n")
+            print("Aviso enviado ao Arduino")
+        except:
+            print("Erro ao enviar para o Arduino")
+
 # Rodar a espera por conex├Áes em segundo plano
 threading.Thread(target=gerenciar_clientes, daemon=True).start()
 
