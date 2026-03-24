@@ -1,13 +1,33 @@
 import serial
 import socket
 import threading
+import os  # Importar para verificar se o arquivo existe
 
-# Configurações
-arduino = serial.Serial('COM13', 9600, timeout=0.1)
+# Nome do arquivo de configuração
+CONFIG_FILE = "config.txt"
+
+if os.path.exists(CONFIG_FILE):
+    # Lê a porta salva
+    with open(CONFIG_FILE, "r") as f:
+        PORTA_REDE = int(f.read().strip())
+        print(f"Porta {PORTA_REDE} carregada do arquivo {CONFIG_FILE}.")
+else:
+    while True:
+        try:
+            nova_porta = int(input("Primeira execução! Digite a porta para o servidor: "))
+            # Salva a porta no arquivo
+            with open(CONFIG_FILE, "w") as f:
+                f.write(str(nova_porta))
+            PORTA_REDE = nova_porta
+            print(f"Porta {PORTA_REDE} salva com sucesso em {CONFIG_FILE}.")
+            break
+        except ValueError:
+            print("Por favor, digite um número válido.")
+
+arduino = serial.Serial('COM13', 9600, timeout=0.1) 
 
 # Configurações da Rede
 IP_SERVIDOR = '0.0.0.0' # Escuta todas as placas de rede
-PORTA_REDE = 5000
 clientes = []
 
 def gerenciar_clientes():
@@ -21,7 +41,7 @@ def gerenciar_clientes():
         print(f"PC conectado: {addr}")
         clientes.append(client)
 
-# Rodar a espera por conexões em segudo plano
+# Rodar a espera por conexões em segundo plano
 threading.Thread(target=gerenciar_clientes, daemon=True).start()
 
 try:
@@ -38,3 +58,4 @@ try:
                         clientes.remove(c)
 except KeyboardInterrupt:
     print("Desligando...")
+
