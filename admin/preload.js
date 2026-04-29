@@ -12,8 +12,11 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   enviar: (msg) => {
-    if (client) {
-      client.write(msg + "\n");
-    }
+  console.log("ENVIANDO:", msg)
+  if (client) {
+    client.write(msg + "\n");
+  } else {
+    console.log("CLIENT NÃO EXISTE")
   }
+}
 });
