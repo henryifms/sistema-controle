@@ -4,7 +4,7 @@ from ctypes import wintypes
 import os
 import time
 
-IP_DO_SERVIDOR = '10.8.33.158'
+IP_DO_SERVIDOR = '172.19.208.1'
 PORTA = 5000
 
 keybd_event = ctypes.windll.user32.keybd_event

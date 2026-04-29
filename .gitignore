@@ -5,3 +5,4 @@ build/
 *.out
 CMakeFiles/
 CMakeCache.txt
+node_modules

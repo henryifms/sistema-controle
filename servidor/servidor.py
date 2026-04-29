@@ -2,10 +2,15 @@ import serial
 import socket
 import threading
 
-# Configura├º├Áes do Arduino
-arduino = serial.Serial('COM12', 9600, timeout=0.1)
+# Configurações do Arduino
+try:
+    arduino = serial.Serial('COM12', 9600, timeout=0.1)
+    print("Arduino conectado!")
+except:
+    arduino = None
+    print("Arduino n conectado (teste)")
 
-# Configura├º├Áes da Rede
+# Configurações da Rede
 IP_SERVIDOR = '0.0.0.0' # Escuta em todas as placas de rede
 PORTA_REDE = 5000
 clientes = []
@@ -32,7 +37,7 @@ threading.Thread(target=gerenciar_clientes, daemon=True).start()
 
 try:
     while True:
-        if arduino.in_waiting > 0:
+        if arduino and arduino.in_waiting > 0:
             comando = arduino.readline().decode('utf-8').strip()
             if comando:
                 print(f"Enviando para rede: {comando}")
