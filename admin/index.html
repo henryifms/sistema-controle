@@ -2,30 +2,89 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Admin</title>
+  <title>Controle</title>
+
   <style>
     body {
-      font-family: sans-serif;
-      text-align: center;
-      margin: 10px;
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
     }
+
+    h1 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #38bdf8;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 12px;
+      border-radius: 10px;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
+      margin-bottom: 8px;
+      background: #0f172a;
+      color: white;
+    }
+
     button {
       width: 100%;
-      margin-top: 5px;
-      padding: 8px;
-      font-size: 12px;
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    .connect { background: #38bdf8; color: black; }
+
+    .on {
+      background: #ef4444;
+      color: white;
+    }
+
+    .off {
+      background: #22c55e;
+      color: black;
     }
   </style>
 </head>
+
 <body>
-  <input id="ip" placeholder="IP do servidor" value="10.8.33.158" />
-  <button id="connect">Conectar</button>
+  <h1>Painel</h1>
 
-  <button onclick="enviar('BLOQUEAR_TECLADO')">Bloquear Teclado</button>
-  <button onclick="enviar('DESBLOQUEAR_TECLADO')">Desbloquear Teclado</button>
+  <div class="card">
+    <input id="ip" value="127.0.0.1" />
 
-  <button onclick="enviar('BLOQUEAR_TELA')">Bloquear Tela</button>
-  <button onclick="enviar('DESBLOQUEAR_TELA')">Desbloquear Tela</button>
+    <select id="sala">
+      <option value="lab1">Lab 1</option>
+      <option value="lab2">Lab 2</option>
+    </select>
+
+    <button class="connect" id="connect">Conectar</button>
+
+    <button id="btnTeclado" class="off">Teclado Livre</button>
+    <button id="btnTela" class="off">Tela Livre</button>
+  </div>
 
   <script src="renderer.js"></script>
 </body>
