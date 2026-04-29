@@ -20,7 +20,7 @@ clientes = {}
 # salas
 salas = {
     "lab1": ["10.8.33.159", "10.8.33.158"],
-    "lab2": ["10.8.33.157", "10.8.33.156"]
+    "lab2": ["10.8.33.157", "10.8.33.156", "10.8.33.152"]
 }
 
 lock = threading.Lock()
@@ -113,7 +113,7 @@ try:
             comando = arduino.readline().decode('utf-8').strip()
 
             if comando:
-                print(f"Arduino → {comando}")
+                print(f"Arduino - {comando}")
 
                 with lock:
                     for c in list(clientes.keys()):
