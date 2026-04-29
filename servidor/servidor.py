@@ -2,7 +2,6 @@ import serial
 import socket
 import threading
 
-# Configurações do Arduino
 try:
     arduino = serial.Serial('COM12', 9600, timeout=0.1)
     print("Arduino conectado!")
@@ -10,10 +9,32 @@ except:
     arduino = None
     print("Arduino n conectado (teste)")
 
-# Configurações da Rede
-IP_SERVIDOR = '0.0.0.0' # Escuta em todas as placas de rede
+IP_SERVIDOR = '0.0.0.0'
 PORTA_REDE = 5000
 clientes = []
+
+def escutar_cliente(client):
+    while True:
+        try:
+            dados = client.recv(1024)
+            if not dados:
+                break
+
+            comando = dados.decode().strip()
+            print(f"Comando recebido: {comando}")
+
+            for c in clientes[:]:
+                try:
+                    c.sendall((comando + "\n").encode())
+                except:
+                    clientes.remove(c)
+
+        except:
+            break
+
+    if client in clientes:
+        clientes.remove(client)
+    client.close()
 
 def gerenciar_clientes():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -26,13 +47,14 @@ def gerenciar_clientes():
         print(f"PC conectado: {addr}")
         clientes.append(client)
 
-        try:
-            arduino.write(b"CLIENTE_CONECTADO\n")
-            print("Aviso enviado ao Arduino")
-        except:
-            print("Erro ao enviar para o Arduino")
+        threading.Thread(target=escutar_cliente, args=(client,), daemon=True).start()
 
-# Rodar a espera por conex├Áes em segundo plano
+        try:
+            if arduino:
+                arduino.write(b"CLIENTE_CONECTADO\n")
+        except:
+            pass
+
 threading.Thread(target=gerenciar_clientes, daemon=True).start()
 
 try:
@@ -41,7 +63,6 @@ try:
             comando = arduino.readline().decode('utf-8').strip()
             if comando:
                 print(f"Enviando para rede: {comando}")
-                # Envia o comando para todos os PCs conectados
                 for c in clientes[:]:
                     try:
                         c.sendall((comando + "\n").encode())
